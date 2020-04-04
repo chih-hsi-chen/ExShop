@@ -21,6 +21,7 @@
 }
 .header__logo .brand {
     width: 100%;
+    display: block;
 }
 .header__search {
     flex: 1;
@@ -174,7 +175,7 @@
 
 @media screen and (max-width: 900px) {
     .ex-header {
-        padding: 20px 24px;
+        padding: 10px 24px;
     }
     .inner-header__leftside {
         margin-right: 10px;
