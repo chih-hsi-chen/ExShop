@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/ExShop/static/css/main.f4e8db15.chunk.css",
-    "main.js": "/ExShop/static/js/main.dfd6c156.chunk.js",
-    "main.js.map": "/ExShop/static/js/main.dfd6c156.chunk.js.map",
+    "main.css": "/ExShop/static/css/main.1e96c87c.chunk.css",
+    "main.js": "/ExShop/static/js/main.735e90f3.chunk.js",
+    "main.js.map": "/ExShop/static/js/main.735e90f3.chunk.js.map",
     "runtime-main.js": "/ExShop/static/js/runtime-main.9f657291.js",
     "runtime-main.js.map": "/ExShop/static/js/runtime-main.9f657291.js.map",
     "static/js/2.5dafd9de.chunk.js": "/ExShop/static/js/2.5dafd9de.chunk.js",
@@ -38,9 +38,9 @@
     "static/js/17.1915f590.chunk.js": "/ExShop/static/js/17.1915f590.chunk.js",
     "static/js/17.1915f590.chunk.js.map": "/ExShop/static/js/17.1915f590.chunk.js.map",
     "index.html": "/ExShop/index.html",
-    "precache-manifest.6ee40adba90b394e6d46cb0a2f4b23cc.js": "/ExShop/precache-manifest.6ee40adba90b394e6d46cb0a2f4b23cc.js",
+    "precache-manifest.53ea241b9b822116785a61aecc4c52ac.js": "/ExShop/precache-manifest.53ea241b9b822116785a61aecc4c52ac.js",
     "service-worker.js": "/ExShop/service-worker.js",
-    "static/css/main.f4e8db15.chunk.css.map": "/ExShop/static/css/main.f4e8db15.chunk.css.map",
+    "static/css/main.1e96c87c.chunk.css.map": "/ExShop/static/css/main.1e96c87c.chunk.css.map",
     "static/js/2.5dafd9de.chunk.js.LICENSE.txt": "/ExShop/static/js/2.5dafd9de.chunk.js.LICENSE.txt",
     "static/media/cloth.png": "/ExShop/static/media/cloth.e756430d.png",
     "static/media/clothes.png": "/ExShop/static/media/clothes.1367060d.png",
@@ -62,7 +62,7 @@
   "entrypoints": [
     "static/js/runtime-main.9f657291.js",
     "static/js/2.5dafd9de.chunk.js",
-    "static/css/main.f4e8db15.chunk.css",
-    "static/js/main.dfd6c156.chunk.js"
+    "static/css/main.1e96c87c.chunk.css",
+    "static/js/main.735e90f3.chunk.js"
   ]
 }
