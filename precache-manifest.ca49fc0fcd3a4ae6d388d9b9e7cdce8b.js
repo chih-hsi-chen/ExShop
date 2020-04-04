@@ -1,11 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "f2f02535b9ac69992d49122f5bf8ee76",
+    "revision": "2455df2814ed2ae70e1e05da3f063972",
     "url": "/ExShop/index.html"
   },
   {
-    "revision": "afc0165fe4b891b5239b",
-    "url": "/ExShop/static/css/main.9beb8fd1.chunk.css"
+    "revision": "0cf42aa758b5e02dd4a6",
+    "url": "/ExShop/static/css/main.a1f06461.chunk.css"
   },
   {
     "revision": "ba52969add58489585ff",
@@ -76,8 +76,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ExShop/static/js/9.587e254b.chunk.js"
   },
   {
-    "revision": "afc0165fe4b891b5239b",
-    "url": "/ExShop/static/js/main.d1f912e8.chunk.js"
+    "revision": "0cf42aa758b5e02dd4a6",
+    "url": "/ExShop/static/js/main.f113b42c.chunk.js"
   },
   {
     "revision": "6ecd1713dd2fdffb25f1",
@@ -112,8 +112,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ExShop/static/media/kilt.b1284606.png"
   },
   {
-    "revision": "85e73a3cef70dfdcd2902f71813321ce",
-    "url": "/ExShop/static/media/logo_large.85e73a3c.png"
+    "revision": "0b4ab95cb8779583378c6e6d69a0a6b7",
+    "url": "/ExShop/static/media/logo_large.0b4ab95c.png"
   },
   {
     "revision": "c21a2f1c933f0b58ab5547f4a446b471",
