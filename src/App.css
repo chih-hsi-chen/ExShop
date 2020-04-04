@@ -3,11 +3,52 @@
     margin: 0;
     padding: 0;
 }
+:root {
+    --main-theme: rgb(165, 62, 177);
+}
 
 body {
     font-family: "Helvetica Neue",Helvetica,Arial,"PingFang TC","Heiti TC","Microsoft JhengHei",sans-serif;
+    background-color: rgb(242, 242, 242);
 }
 
-.main-container {
+.homepage-section {
+    margin-top: 1.5rem;
     background-color: white;
+}
+.l-wrapper {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+/* .homepage-section__content {
+
+} */
+.homepage-section__header {
+    padding: 1.25rem;
+    color: var(--main-theme);
+    border-bottom: 1px solid rgba(0,0,0,.05);
+}
+
+.hide-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+}
+.hide-scrollbar::-webkit-scrollbar { 
+    display: none; /* Chrome Safari */
+}
+
+@media screen and (max-width: 900px) {
+    html {
+        font-size: 14px;
+    }
+    .homepage-section__content {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    html {
+        font-size: 12px;
+    }
 }

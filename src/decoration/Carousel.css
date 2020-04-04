@@ -1,0 +1,110 @@
+.hero-banner {
+    position: relative;
+    width: 100%;
+    background-color: #f9f9f9;
+}
+.carousel__container {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    height: 400px;
+    margin: 0 auto;
+    /* overflow: hidden; */
+}
+.carousel__slide {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    background-color: rgb(175, 171, 171);
+}
+.carousel__item {
+    flex: 0 0 100%;
+    text-align: center;
+    padding: 15px;
+}
+.carousel__btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 50px;
+    /* background-color: rgb(140, 130, 234); */
+    background-color: white;
+    outline: 0;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    /* box-shadow: 2px 0 4px 0 rgba(0, 0, 0, 0.3); */
+}
+.carousel__btn--prev {
+    left: 0;
+}
+.carousel__btn--next {
+    right: 0;
+    transform: rotateY(180deg) translate(0, -50%);
+}
+#prevArrow, #nextArrow {
+    color: #545057;
+    font-size: 20px;
+}
+
+.carousel__dots {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    list-style: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel__dots > li {
+    width: 10px;
+    height: 10px;
+    margin: 0 10px;
+    padding: 0;
+
+    cursor: pointer;
+}
+.carousel__dots > .dot > button {
+    position: relative;
+    font-size: 0;
+    line-height: 0;
+
+    display: block;
+
+    width: 10px;
+    height: 10px;
+
+    cursor: pointer;
+
+    color: transparent;
+    border: none;
+    outline: 0;
+    background-color: transparent;
+}
+.carousel__dots > .dot > button::before
+{
+    opacity: .50;
+    background-color: black;
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.carousel__dots > .dot.slide-active > button::before {
+    opacity: .75;
+}
+
+@media screen and (max-width: 900px) {
+    .carousel__container {
+        height: 60vw;
+        max-height: 400px;
+    }
+}

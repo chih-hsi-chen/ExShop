@@ -3,6 +3,7 @@
     padding: 10px 50px;
     box-shadow: 0 2px 0 0 rgba(211, 211, 211, 0.4);
     z-index: 99;
+    background-color: white;
 }
 
 .inner-header {
@@ -13,7 +14,7 @@
     display: flex;
     align-items: center;
     margin-right: 20px;
-    flex: 1;
+    flex-grow: 1;
 }
 .header__logo {
     flex: 0 0 150px;
@@ -83,29 +84,34 @@
     outline: 0;
     cursor: pointer;
 }
-.header__rightside .tab:hover {
-    color: rgb(179, 76, 190);
-}
 .header__rightside .tab:not(:last-of-type) {
     margin-right: 30px;
 }
 .rightside__sign {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
-    color: rgb(179, 76, 190);
-    border: 2px solid rgb(179, 76, 190);
+    color: rgb(165, 62, 177);
+    border: 2px solid rgb(165, 62, 177);
     border-radius: 5px;
     padding: 4px 6px;
+    height: 28px;
+    line-height: 14px;
 }
-.rightside__shopcart {
-    font-size: 25px;
+.tab:hover {
+    color: rgb(204, 114, 214);
 }
+.rightside__sign:hover {
+    border-color: rgb(204, 114, 214);
+}
+
 .tab-icon {
     position: relative;
 }
-.tab-icon__icon {
-    display: block !important;
+#searchbtn, #shopcart {
+    display: block;
+    font-size: 26px;
 }
+
 .tab-icon__label {
     position: absolute;
     top: 0;
@@ -123,6 +129,9 @@
     text-align: center;
 
     transform: translate(50%, -50%);
+}
+.rightside__sign > .tab-icon{
+    display: none;
 }
 
 /*  navbar header  */
@@ -164,9 +173,36 @@
 }
 
 @media screen and (max-width: 900px) {
+    .ex-header {
+        padding: 20px 24px;
+    }
+    .inner-header__leftside {
+        margin-right: 10px;
+    }
+    .header__logo {
+        max-width: 45px;
+    }
     .header__search {
         display: none;
     }
+
+    .rightside__sign {
+        color: inherit;
+        border: none;
+        line-height: 30px;
+        height: 30px;
+        padding: 0;
+    }
+    .rightside__sign > span {
+        display: none;
+    }
+    .rightside__sign > .tab-icon {
+        display: block;
+    }
+    #account {
+        font-size: 30px;
+    }
+
     .nav-header {
         display: none;
     }
