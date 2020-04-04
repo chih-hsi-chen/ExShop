@@ -5,6 +5,7 @@
 }
 :root {
     --main-theme: rgb(165, 62, 177);
+    --section-title-color: #1b191b;
 }
 
 body {
@@ -26,8 +27,7 @@ body {
 } */
 .homepage-section__header {
     padding: 1.25rem;
-    color: var(--main-theme);
-    border-bottom: 1px solid rgba(0,0,0,.05);
+    color: var(--section-title-color, #562c6b);
 }
 
 .hide-scrollbar {

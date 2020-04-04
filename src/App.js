@@ -3,6 +3,7 @@ import './App.css';
 import Header from 'component/Header.jsx';
 import Carousel from 'component/Carousel.jsx';
 import CategoryList from 'component/CategoryList.jsx';
+import ProductCardList from 'component/ProductCardList.jsx';
 
 function App() {
     return (
@@ -11,6 +12,7 @@ function App() {
             <main>
                 <Carousel />
                 <CategoryList />
+                <ProductCardList />
             </main>
         </div>
     );

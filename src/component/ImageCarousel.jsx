@@ -136,7 +136,7 @@ class ImageCarousel extends Component {
         if(scrollOffset <= 0)
             return;
         
-        this._list.style.transition = 'transform 0.3s ease';
+        this._list.style.transition = 'transform 0.5s ease';
         this.setState((prevState) => {
             return {
                 offset_start: prevState.offset_start - scrollOffset,
@@ -154,7 +154,7 @@ class ImageCarousel extends Component {
         if(scrollOffset <= 0)
             return;
         
-        this._list.style.transition = 'transform 0.3s ease';
+        this._list.style.transition = 'transform 0.5s ease';
         this.setState((prevState) => {
             return {
                 offset_start: prevState.offset_start + scrollOffset,
@@ -197,24 +197,23 @@ class ImageCarousel extends Component {
                         {items}
                     </ul>                    
                 </div>
-                <div 
-                    className="image-carousel__arrow image-carousel__arrow--prev"
-                    onClick = {this._handlePrev}
-                    style = {{
-                        visibility: (offset_start <= 0) ? 'hidden' : 'visible'
-                    }}
-                >
-                    <ArrowBackIosOutlined style={{fontSize: `16px`}} />
-                </div>
-                <div
-                    className="image-carousel__arrow image-carousel__arrow--next"
-                    onClick = {this._handleNext}
-                    style = {{
-                        visibility: (offset_end >= carousel_length - 1) ? 'hidden' : 'visible'
-                    }}
-                >
-                    <ArrowForwardIosOutlined style={{fontSize: `16px`}} />
-                </div>
+                { (offset_start > 0) && (
+                    <div 
+                        className="image-carousel__arrow image-carousel__arrow--prev"
+                        onClick = {this._handlePrev}
+                    >
+                        <ArrowBackIosOutlined style={{fontSize: `16px`}} />
+                    </div>
+                )}
+                { (offset_end < carousel_length - 1) && (
+                    <div
+                        className="image-carousel__arrow image-carousel__arrow--next"
+                        onClick = {this._handleNext}
+                    >
+                        <ArrowForwardIosOutlined style={{fontSize: `16px`}} />
+                    </div>
+                )}
+                
             </div>
         );
     }
@@ -223,6 +222,15 @@ class ImageCarousel extends Component {
 ImageCarousel.propTypes = {
     default_setting: PropTypes.object.isRequired,
     responsive: PropTypes.array,
+};
+ImageCarousel.defaultProps = {
+    default_setting: {
+        slideToShow: 10,
+        slideToScroll: 10,
+    },
+    responsive: [
+        
+    ]
 };
  
 export default ImageCarousel;
