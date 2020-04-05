@@ -11,7 +11,7 @@
     margin: 0 auto;
     padding: 0 20px;
 }
-@media screen and (max-width: 640px) {
+@media (max-width: 767px) {
     .values__container {
         flex-direction: column;
         justify-content: flex-start;
@@ -29,7 +29,7 @@
 .values__block:not(:last-of-type) {
     margin-right: 10px;
 }
-@media screen and (max-width: 640px) {
+@media (max-width: 767px) {
     .values__block {
         flex: 1 0 auto;
         width: 200px;

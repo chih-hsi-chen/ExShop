@@ -56,7 +56,7 @@ class FeatureList extends Component {
                 {
                     title: '優惠特價好所在',
                     details: '貨比三家不吃虧，以更優惠的價格買到你心目中的設計。',
-                    imageName: 'discount2',
+                    imageName: 'discount',
                 },
                 {
                     title: '消費資訊不外洩',

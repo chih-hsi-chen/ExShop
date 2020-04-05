@@ -45,12 +45,12 @@
 .image-carousel__arrow--next {
     right: -10px;
 }
-@media screen and (min-width: 1248px) {
+@media (min-width: 1248px) {
     .image-carousel {
         overflow: visible;
     }
 }
-@media screen and (max-width: 900px) {
+@media (max-width: 900px) {
     .image-carousel__itemlist-wrapper {
         overflow-x: auto;
 

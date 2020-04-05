@@ -5,6 +5,7 @@ import Carousel from 'component/Carousel.jsx';
 import CategoryList from 'component/CategoryList.jsx';
 import ProductCardList from 'component/ProductCardList.jsx';
 import FeatureList from 'component/FeatureList.jsx';
+import Footer from 'component/Footer.jsx';
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                 />
                 <FeatureList />
             </main>
+            <Footer />
         </div>
     );
 }

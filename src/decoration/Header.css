@@ -1,6 +1,6 @@
 .ex-header {
     position: relative;
-    padding: 10px 50px;
+    padding: 10px 0;
     box-shadow: 0 2px 0 0 rgba(211, 211, 211, 0.4);
     z-index: 99;
     background-color: white;
@@ -17,7 +17,7 @@
     flex-grow: 1;
 }
 .header__logo {
-    flex: 0 0 150px;
+    flex: 0 0 120px;
 }
 .header__logo .brand {
     width: 100%;
@@ -27,6 +27,7 @@
     flex: 1;
     max-width: 600px;
     overflow: hidden;
+    margin-left: 20px;
 }
 .search {
     display: flex;
@@ -173,10 +174,7 @@
     cursor: pointer;
 }
 
-@media screen and (max-width: 900px) {
-    .ex-header {
-        padding: 10px 24px;
-    }
+@media (max-width: 900px) {
     .inner-header__leftside {
         margin-right: 10px;
     }

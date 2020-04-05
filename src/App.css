@@ -21,7 +21,15 @@ body {
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
+    padding: 0 24px;
 }
+@media (min-width: 1248px) {
+    .l-wrapper {
+        padding: 0;
+    }
+}
+
+
 .homepage-section__header {
     padding: 1.25rem;
     color: var(--section-title-color, #562c6b);
@@ -38,7 +46,7 @@ body {
     display: none; /* Chrome Safari */
 }
 
-@media screen and (max-width: 900px) {
+@media (max-width: 900px) {
     html {
         font-size: 14px;
     }
@@ -47,7 +55,7 @@ body {
     }
 }
 
-@media screen and (max-width: 600px) {
+@media (max-width: 600px) {
     html {
         font-size: 12px;
     }
