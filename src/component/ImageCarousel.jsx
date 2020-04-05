@@ -41,8 +41,7 @@ class ImageCarousel extends Component {
         
     }
     componentDidMount() {
-        const wrapper = this._wrapper;
-
+        
         this._onResize();
         window.addEventListener('resize', this._onResize);
         this._list.addEventListener('transitionend', function(e) {

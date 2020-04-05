@@ -56,7 +56,7 @@ class ProductCardList extends Component {
 
         return ( 
             <section className="card-section" data-section>
-                <div className="card-section__wrapper">
+                <div className="l-wrapper">
                     <div className="card-section__title homepage-section__header">
                         <h1 className="title">
                             <span className="title__text">{sec_name}</span>
@@ -81,13 +81,19 @@ class ProductCardList extends Component {
                                         }
                                     },
                                     {
-                                        breakpoint: 600,
+                                        breakpoint: 630,
                                         setting: {
                                             slideToShow: 3,
                                             slideToScroll: 3,
                                         }
                                     },
-                                    
+                                    {
+                                        breakpoint: 480,
+                                        setting: {
+                                            slideToShow: 2,
+                                            slideToScroll: 2,
+                                        }
+                                    }
                                 ]
                             }
                         >

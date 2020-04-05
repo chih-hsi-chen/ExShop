@@ -1,11 +1,6 @@
 .card-section {
     background-color: white;
-    padding: 36px 0;
-}
-.card-section__wrapper {
-    max-width: 1200px;
-    width: 100%;
-    margin: 0 auto;    
+    padding: 10px 0;
 }
 .card-section__content {
     position: relative;
@@ -47,7 +42,8 @@
 }
 .card-section__title .title__more-link {
     display: inline-block;
-    font-size: 1rem;
+    font-size: 14px;
+    line-height: 14px;
     text-decoration: none;
     color: #a297de;
     margin-left: 1rem;
