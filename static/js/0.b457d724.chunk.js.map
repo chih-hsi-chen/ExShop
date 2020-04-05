@@ -1,1 +1,0 @@
-{"version":3,"sources":["images/png/cloth.png"],"names":["module","exports"],"mappings":"oFAAAA,EAAOC,QAAU,IAA0B","file":"static/js/0.b457d724.chunk.js","sourcesContent":["module.exports = __webpack_public_path__ + \"static/media/cloth.e756430d.png\";"],"sourceRoot":""}
