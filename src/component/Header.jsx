@@ -2,7 +2,7 @@ import React from 'react';
 import {
     ShoppingCartOutlined,
     SearchOutlined,
-    PersonOutlineOutlined
+    AccountCircleOutlined,
 } from '@material-ui/icons';
 import 'decoration/Header.css';
 import logo_large from 'images/logo_large.png';
@@ -53,7 +53,7 @@ class Header extends React.Component {
                                 <button className="rightside__sign tab">
                                     <span>註冊/登入</span>
                                     <div className="tab-icon">
-                                        <PersonOutlineOutlined id="account" className="tab-icon__icon" />
+                                        <AccountCircleOutlined id="account" className="tab-icon__icon" />
                                     </div>
                                 </button>
                                 <button className="rightside__shopcart tab">

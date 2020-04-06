@@ -1,6 +1,7 @@
 .ex-header {
     position: relative;
-    padding: 10px 0;
+    width: 100%;
+    padding: 20px 0 14px;
     box-shadow: 0 2px 0 0 rgba(211, 211, 211, 0.4);
     z-index: 99;
     background-color: white;
@@ -9,7 +10,14 @@
 .inner-header {
     display: flex;
     justify-content: space-between;
+    padding: 0 12px;
 }
+@media (min-width: 948px) {
+    .inner-header {
+        padding: 0;
+    }
+}
+
 .inner-header__leftside {
     display: flex;
     align-items: center;
@@ -105,13 +113,23 @@
 .rightside__sign:hover {
     border-color: rgb(204, 114, 214);
 }
+.rightside__searchBtn {
+    display: none;
+}
 
 .tab-icon {
     position: relative;
 }
-#searchbtn, #shopcart {
+.tab-icon .tab-icon__icon {
+    --icon-size: 26px;
+
     display: block;
-    font-size: 26px;
+    font-size: var(--icon-size);
+    width: var(--icon-size);
+    height: var(--icon-size);
+}
+#searchbtn {
+    --icon-size: 24px;
 }
 
 .tab-icon__label {
@@ -175,6 +193,10 @@
 }
 
 @media (max-width: 900px) {
+    .ex-header {
+        position: fixed;
+        top: 0;
+    }
     .inner-header__leftside {
         margin-right: 10px;
     }
@@ -184,12 +206,19 @@
     .header__search {
         display: none;
     }
-
+    .rightside__searchBtn {
+        display: block;
+    }
+    .nav-header {
+        display: none;
+    }
+}
+@media (max-width: 600px) {
     .rightside__sign {
         color: inherit;
         border: none;
-        line-height: 30px;
-        height: 30px;
+        line-height: 1;
+        height: auto;
         padding: 0;
     }
     .rightside__sign > span {
@@ -197,12 +226,5 @@
     }
     .rightside__sign > .tab-icon {
         display: block;
-    }
-    #account {
-        font-size: 30px;
-    }
-
-    .nav-header {
-        display: none;
     }
 }

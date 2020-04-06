@@ -235,7 +235,18 @@ ProductCardList.defaultProps = {
             brand: '自有品牌',
             shop_location: '台灣新竹市東區',
             name: '好穿透氣鞋'
-        }
+        },
+        {
+            catid: 100,
+            itemid: 2642754841,
+            image: '77ebe79252d2e8ba49eaafdb04f07230',
+            price_min: 75000000,
+            price_max: 90000000,
+            price: 90000000,
+            brand: '自有品牌',
+            shop_location: '台灣新竹市東區',
+            name: '好穿透氣鞋'
+        },
     ],
 };
 

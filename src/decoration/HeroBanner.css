@@ -1,0 +1,29 @@
+.hero-banner {
+    position: relative;
+    width: 100%;
+    background-color: #f9f9f9;
+}
+.carousel__container {
+    position: relative;
+    width: 720px;
+    margin: 0 auto;
+}
+
+.carousel__item {
+    position: relative;
+    width: 720px;
+    height: 405px;
+    text-align: center;
+    background-color: bisque;
+}
+
+/* if less than 768px (for tablets) */
+@media (max-width: 767px) {
+    .carousel__container {
+        width: 100%;
+    }
+    .carousel__item {
+        width: 100%;
+        height: 56.25vw;
+    }
+}
