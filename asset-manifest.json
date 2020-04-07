@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/ExShop/static/css/main.1b270047.chunk.css",
-    "main.js": "/ExShop/static/js/main.cc662a15.chunk.js",
-    "main.js.map": "/ExShop/static/js/main.cc662a15.chunk.js.map",
+    "main.js": "/ExShop/static/js/main.4646902d.chunk.js",
+    "main.js.map": "/ExShop/static/js/main.4646902d.chunk.js.map",
     "runtime-main.js": "/ExShop/static/js/runtime-main.df89c74d.js",
     "runtime-main.js.map": "/ExShop/static/js/runtime-main.df89c74d.js.map",
     "static/js/2.de964c88.chunk.js": "/ExShop/static/js/2.de964c88.chunk.js",
     "static/js/2.de964c88.chunk.js.map": "/ExShop/static/js/2.de964c88.chunk.js.map",
     "index.html": "/ExShop/index.html",
-    "precache-manifest.ad8faa27089c3a2fa8e6fef06662fccd.js": "/ExShop/precache-manifest.ad8faa27089c3a2fa8e6fef06662fccd.js",
+    "precache-manifest.6ca68f7ff30f7c76784f716d005de8ca.js": "/ExShop/precache-manifest.6ca68f7ff30f7c76784f716d005de8ca.js",
     "service-worker.js": "/ExShop/service-worker.js",
     "static/css/main.1b270047.chunk.css.map": "/ExShop/static/css/main.1b270047.chunk.css.map",
     "static/js/2.de964c88.chunk.js.LICENSE.txt": "/ExShop/static/js/2.de964c88.chunk.js.LICENSE.txt",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.df89c74d.js",
     "static/js/2.de964c88.chunk.js",
     "static/css/main.1b270047.chunk.css",
-    "static/js/main.cc662a15.chunk.js"
+    "static/js/main.4646902d.chunk.js"
   ]
 }
