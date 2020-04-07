@@ -6,10 +6,29 @@ import 'decoration/ImageCarousel.css';
 function lerp(a, b, n) {
     return (1 - n) * a + n * b;
 }
+/**
+ * Return touch event target (information for pointer location)
+ * 
+ * @param {TouchEvent} e - Touch event from users
+ */
+function getTouchClient(e) {
+    console.log(e);
+    
+    return e.targetTouches[0];
+}
 
 const ImageCarouselDot = (props) => {
     const activeClass = props.isActive? 'image-carousel__dot--active': '';
 
+    if('ontouchstart' in window) {
+        return (
+            <div
+                className = {`image-carousel__dot ${activeClass}`}
+                onTouchStart = {() => props.handleClick(props.offset)}
+            >
+            </div>
+        );
+    }
     return (
         <div
             className = {`image-carousel__dot ${activeClass}`}
@@ -19,25 +38,21 @@ const ImageCarouselDot = (props) => {
     );
 }
 
-class ImageCarouselItem extends Component {
-    constructor(props) {
-        super(props);
-    }
-    render() {
-        const {children, size, unit} = this.props;
+const ImageCarouselItem = (props) => {
+    const {children, size, unit} = props;
+    const clonedClass = (props.isCloned) ? 'image-carousel__item--cloned' : '';
+    const activeClass = (props.isActive) ? 'image-carousel__item--active' : '';
 
-        return (
-            <li 
-                className="image-carousel__item" 
-                style = {{
-                    'flex': `0 0 ${size}${unit}`
-                }}
-                ref = {s => (this._slide = s)}
-            >
-                {children}
-            </li>
-        );
-    }
+    return (
+        <li 
+            className={`image-carousel__item ${clonedClass} ${activeClass}`}
+            style = {{
+                'flex': `0 0 ${size}${unit}`
+            }}
+        >
+            {children}
+        </li>
+    );
 }
 
 class ImageCarousel extends Component {
@@ -46,22 +61,35 @@ class ImageCarousel extends Component {
         this.state = {
             size: 0,
             unit: '%',
+
+            length: 0,
             offset_start: 0,
             offset_end: -1,
             slideToShow: 0,
             slideToScroll: 0,
+            activeDotIndex: 0,
+            
             draggable: false,
+            dragSpeed: 1.5,
             dragOffset: 0,
+            ease: 0.1,
         };
+        this.minIndex = 0;
+        this.maxIndex = props.children.length - 1;
+
         this.adjustCarousel = this.adjustCarousel.bind(this);
         this._onResize = this._onResize.bind(this);
+        this._onTransitionEnd = this._onTransitionEnd.bind(this);
         this._handlePrev = this._handlePrev.bind(this);
         this._handleNext = this._handleNext.bind(this);
         this.bindDragEvents = this.bindDragEvents.bind(this);
 
         this.isTouch = false;
         this.isDragging = false;
-        this.startoffX = 0;
+        this.isProgress = false;
+        this.startTime = 0;
+        this.endTime = 0;
+
         this.mouseonX = 0;
         this.currentX = 0;
         this.lastX = 0;
@@ -89,9 +117,7 @@ class ImageCarousel extends Component {
     componentDidMount() {
         this._onResize();
         window.addEventListener('resize', this._onResize);
-        this._list.addEventListener('transitionend', function(e) {
-            this.style.transition = '';
-        });
+        this._list.addEventListener('transitionend', this._onTransitionEnd);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -104,15 +130,19 @@ class ImageCarousel extends Component {
                 this.removeDragEvents();
             }
         }
-
+        
         return true;
     }
     run() {
-        this.lastX = lerp(this.lastX, this.currentX, 0.1);
+        const {ease} = this.state;
+        this.lastX = lerp(this.lastX, this.currentX, ease);
         this.lastX = Math.floor(this.lastX * 100) / 100;
 
+        if(Math.round(this.lastX) === 0)
+            this.lastX = 0;
+
         // only when dragging or dragend(fail to slide over) need to update dragOffset
-        if(this.isDragging || (this.currentX === 0 && this.lastX !== 0)) {
+        if(this.isDragging || !(this.currentX === 0 && this.lastX === this.currentX) ) {
             this.setState((prevState) => {
                 return {
                     dragOffset: this.getDragOffset(),
@@ -122,38 +152,61 @@ class ImageCarousel extends Component {
 
         this.requestAnimationFrame();
     }
+    /**
+     * Set mouse/finger target location when dragging
+     * 
+     * @param {Event} e 
+     */
     setPos(e) {
+        const {dragSpeed} = this.state;
         const wrapperRect = this._wrapper.getBoundingClientRect();
         let magnitude;
         e.preventDefault();
 
-        if(!this.isDragging) return;        
+        if(!this.isDragging)
+            return;        
         if(this.isTouch)
-            e = this.getTouchClient(e);
+            e = getTouchClient(e);
 
-        this.currentX = (e.clientX - wrapperRect.left - this.mouseonX) * 1.2;
+        this.currentX = (e.clientX - wrapperRect.left - this.mouseonX) * dragSpeed;
         magnitude = (this.currentX >= 0) ? 1 : -1;
 
         this.currentX = magnitude * Math.min(Math.abs(this.currentX), wrapperRect.width / 2);
     }
+    /**
+     * Record drag start information
+     * 
+     * @param {Event} e 
+     */
     dragStart(e) {
         const wrapperRect = this._wrapper.getBoundingClientRect();
         e.preventDefault();
-        
+
+        if(this.isProgress)
+            return;
         if(this.isTouch)
-            e = this.getTouchClient(e);
+            e = getTouchClient(e);
         
         this.isDragging = true;
         this.mouseonX = e.clientX - wrapperRect.left;
+        this.startTime = Date.now(); // include milliseconds
         this._wrapper.classList.add('dragging');
     }
+    /**
+     * Calculate if drag is successful and remove dragging mode
+     * 
+     * @param {Event} e 
+     */
     dragEnd(e) {
-        const {dragOffset} = this.state;
+        const wrapper_width = this._wrapper.clientWidth;
+        const dragRatio = Math.abs( this.lastX / wrapper_width );
         e.preventDefault();
 
-        // move result snap
-        if(Math.abs(dragOffset) >= 20.0) {
-            let handleMove = (dragOffset > 0) ? this._handlePrev : this._handleNext;
+        // include milliseconds
+        this.endTime = Date.now();
+        // depend on drag ratio and drag velocity(unit: px/s)
+        if( dragRatio >= 0.2 || this.calcDragVelocity() >= 300.0 ) {
+            let handleMove = (this.lastX > 0) ? this._handlePrev : this._handleNext;
 
             if(handleMove()) {
                 this.lastX = 0;
@@ -166,6 +219,25 @@ class ImageCarousel extends Component {
         this.isDragging = false;
         this.currentX = 0;
         this._wrapper.classList.remove('dragging');
+    }
+    getDragOffset = () => {
+        const {unit} = this.state;
+        const wrapper_width = this._wrapper.clientWidth;
+
+        if(unit === '%') {
+            return this.lastX * 100 / wrapper_width;
+        }
+        
+        return this.lastX;
+    }
+    calcDragVelocity = () => {
+        const elaspedTime = this.endTime - this.startTime;
+        const distance = this.currentX;
+
+        if(elaspedTime === 0)
+            return 0;
+        
+        return Math.abs(distance * 1000 / elaspedTime);
     }
     addDragEvents() {
         this.run();
@@ -201,9 +273,6 @@ class ImageCarousel extends Component {
     cancelAnimationFrame() {
         cancelAnimationFrame(this.rAF);
     }
-    getTouchClient = (e) => {
-        return e.targetTouches[0];
-    }
 
     _onResize() {
         const {responsive: res, default_setting} = this.props;
@@ -229,55 +298,103 @@ class ImageCarousel extends Component {
 
         this.adjustCarousel(targetSetting);
     }
+    _onTransitionEnd() {
+        const {offset_start, infinite, slideToShow, length} = this.state;
+        const isCloned = (offset_start <= (slideToShow - 1) || offset_start >= length - slideToShow);
+
+        this.isProgress = false;
+        this._list.style.transition = '';
+
+        if(infinite && isCloned) {
+            if(offset_start <= slideToShow - 1)
+                this.moveTo(length - 2 * slideToShow, false);
+            else
+                this.moveTo(slideToShow, false);
+        }
+    }
     /**
      * 
      * @param {MediaQueryList} cssMedia - css media query
      * @param {Object} setting - carousel setting
      */
     adjustCarousel(setting) {
-        const {slideToShow} = setting;
-        const carousel_length = this.props.children.length;
+        const {slideToShow, infinite} = setting;
+        let carousel_length = this.props.children.length;
         let size =  `${100 / slideToShow}`;
 
         if(setting.unit === 'px') {
             const wrapper_size = this._wrapper.clientWidth;
             size = `${wrapper_size / slideToShow}`;
         }
+        if(setting.infinite)
+            carousel_length += slideToShow * 2;
 
         this.setState((prevState) => {
-            let newOffsetEnd = prevState.offset_start + (slideToShow - 1);
+            let newOffsetStart = prevState.offset_start;
+            let newOffsetEnd;
 
-            if(newOffsetEnd >= carousel_length)
-                newOffsetEnd = carousel_length - 1;
+            if(infinite)
+                newOffsetStart += slideToShow;
+            if(prevState.infinite) {
+                newOffsetStart += -prevState.slideToShow;
+            }
+            newOffsetEnd = newOffsetStart + (slideToShow - 1);
 
             return {
                 ...setting,
+                length: carousel_length,
                 size,
-                offset_start: prevState.offset_start,
+                offset_start: newOffsetStart,
                 offset_end: newOffsetEnd,
-            };             
+            };
         });
     }
-
+    
     _handlePrev() {
-        const {offset_start, slideToScroll} = this.state;
+        const {
+            offset_start,
+            slideToScroll,
+            slideToShow,
+            infinite,
+        } = this.state;
+        const restForInfinite = offset_start - slideToShow;
         let scrollOffset = -slideToScroll;
 
+        // general case for bounds
         if(offset_start + scrollOffset < 0)
             scrollOffset = -offset_start;
-        
+        // special case for infinite
+        if( infinite && (restForInfinite > 0 && restForInfinite < slideToScroll) )
+            scrollOffset = -restForInfinite;
+
+        if(scrollOffset === 0)
+            return false;
         
         return this.move(scrollOffset);
     }
     
     _handleNext() {
-        const carousel_length = this.props.children.length;
-        const {offset_end, slideToScroll} = this.state;
+        const {
+            offset_end,
+            slideToScroll,
+            slideToShow,
+            infinite,
+            length
+        } = this.state;
+        const restForInfinite = length - 1 - slideToShow - offset_end;
         let scrollOffset = slideToScroll;
 
-        if(offset_end + scrollOffset >= carousel_length)
-            scrollOffset = carousel_length - 1 - offset_end;
-        
+        // general case for bounds
+        if(offset_end + scrollOffset >= length)
+                scrollOffset = length - 1 - offset_end;
+
+        // special case for infinite
+        if( infinite && (restForInfinite > 0 && restForInfinite < slideToScroll) )
+            scrollOffset = restForInfinite;
+
+        if(scrollOffset === 0)
+            return false;
+
         return this.move(scrollOffset);
     }
     /**
@@ -285,58 +402,94 @@ class ImageCarousel extends Component {
      *
      * @param {Number} scrollOffset - scroll offset, 0 will be ignored
      */
-    move = (scrollOffset) => {
-        const carousel_length = this.props.children.length;
-        const {offset_start, offset_end} = this.state;
+    move = (scrollOffset, isAnimation = true) => {
+        const {offset_start, offset_end, length} = this.state;
 
-        if(scrollOffset === 0)
+        if(scrollOffset === 0 || this.isProgress)
             return false;
-        if((offset_start + scrollOffset) < 0 || (offset_end + scrollOffset) >= carousel_length)
+        if((offset_start + scrollOffset) < 0 || (offset_end + scrollOffset) >= length)
             return false;
 
-        this._list.style.transition = 'transform 0.4s ease';
+        this.isProgress = isAnimation;
+        this._list.style.transition = (isAnimation) ? 'transform 0.4s ease' :'';
         this.setState((prevState) => {
             return {
                 offset_start: prevState.offset_start + scrollOffset,
                 offset_end: prevState.offset_end + scrollOffset,
+                activeDotIndex: this.getActualPageIndex(prevState.offset_start + scrollOffset),
             };
         });
 
         return true;
     }
-    moveTo = (targetIndex) => {
-        const length = React.Children.count(this.props.children);
-        const {slideToShow} = this.state;        
+    moveTo = (targetIndex, isAnimation = true) => {
+        const {offset_start, slideToShow, length} = this.state;
 
-        console.log(length);
-        
-
+        if(offset_start === targetIndex || this.isProgress)
+            return false;
         if(targetIndex < 0 || targetIndex > (length - slideToShow))
             return false;
         
-
-        this._list.style.transition = 'transform 0.4s ease';
+        this.isProgress = isAnimation;
+        this._list.style.transition = (isAnimation) ? 'transform 0.4s ease' :'';
         this.setState((prevState) => {
             return {
                 offset_start: targetIndex,
                 offset_end: targetIndex + (slideToShow - 1),
+                activeDotIndex: this.getActualPageIndex(targetIndex),
             };
         });
 
         return true;
     }
-    getDragOffset = () => {
-        const {unit} = this.state;
-        const wrapper_width = this._wrapper.clientWidth;
+    createItems = () => {
+        const originItems = React.Children.toArray(this.props.children);
+        const {
+            size,
+            unit,
+            infinite,
+            slideToShow,
+            offset_start,
+        } = this.state;        
 
-        if(unit === '%') {
-            return this.lastX * 100 / wrapper_width;
+        // if no-loop, then directly transform items into ImageCarouselItem
+        if(!infinite)
+            return originItems.map((item, index) => {
+                return (
+                    <ImageCarouselItem
+                        key={index} 
+                        size = {size}
+                        unit = {unit}
+                        isActive = {offset_start === index}
+                    >
+                        {item}
+                    </ImageCarouselItem>
+                );
+            });
+        else {
+            // Clone first 4 items and last 4 items
+            const firstfour = originItems.slice(0, slideToShow);
+            const lastfour = originItems.slice(-slideToShow);
+
+            return [...lastfour, ...originItems, ...firstfour].map((item, index) => {
+                const isCloned = (index <= (slideToShow - 1) || index >= originItems.length + slideToShow);
+
+                return (
+                    <ImageCarouselItem
+                        key={index} 
+                        size = {size}
+                        unit = {unit}
+                        isCloned = {isCloned}
+                        isActive = {offset_start === index}
+                    >
+                        {item}
+                    </ImageCarouselItem>
+                );
+            });
         }
-        
-        return this.lastX;
     }
-    createDots = (activeDotIndex) => {
-        const {slideToShow} = this.state;
+    createDots = () => {
+        const {slideToShow, infinite, activeDotIndex} = this.state;
         const dots = React.Children.toArray(this.props.children).filter((child, index) => {
             if(index % slideToShow === 0) {
                 return true;
@@ -346,43 +499,64 @@ class ImageCarousel extends Component {
         
         return dots.map((dot, index) => {
             let active = (index === activeDotIndex);
+            let moveToOffset = index * slideToShow;
+
+            if(infinite)
+                moveToOffset += slideToShow;
 
             return (
                 <ImageCarouselDot
                     key = {index}
-                    offset = {index * slideToShow}
+                    offset = {moveToOffset}
                     handleClick = {this.moveTo}
                     isActive = {active}
                 />
             );
         });
     }
+    getActualPageIndex = (offset) => {
+        const carousel_length = React.Children.count(this.props.children);
+        const {infinite, slideToShow} = this.state;
+        let actualOffsetInOrigin = offset;
+
+        if(infinite) {
+            if(offset < slideToShow)
+                actualOffsetInOrigin = carousel_length - 1 - offset;
+            else if(offset >= carousel_length + slideToShow)
+                actualOffsetInOrigin = offset - carousel_length - slideToShow;
+            else
+                actualOffsetInOrigin = offset - slideToShow;
+        }
+        return Math.floor(actualOffsetInOrigin / slideToShow);
+    }
+    isReachFirst = () => {
+        const {infinite, offset_start} = this.state;
+
+        if(infinite)
+            return false;
+        
+        return (offset_start === 0);
+    }
+    isReachLast = () => {
+        const {infinite, offset_end, length} = this.state;
+
+        if(infinite)
+            return false;
+        
+        return (offset_end === length - 1);
+    }
 
     render() {
-        const {children} = this.props;
         const {
             offset_start,
-            offset_end,
-            slideToShow,
+            activeDotIndex,
             size,
             unit,
             draggable,
             dots,
             dragOffset,
         } = this.state;
-        const carousel_length = this.props.children.length;
-        const activeDotIndex = Math.floor(offset_start / slideToShow);
-        const items = React.Children.map(children, (child, index) => {
-            return (
-                <ImageCarouselItem
-                    key={index} 
-                    size = {size}
-                    unit = {unit}
-                >
-                    {child}
-                </ImageCarouselItem>
-            );
-        });
+        const items = this.createItems();
         let listStyle = {
             transform: `translateX(${-offset_start * size}${unit})`
         };
@@ -405,7 +579,7 @@ class ImageCarousel extends Component {
                         {items}
                     </ul>                    
                 </div>
-                { (offset_start > 0) && (
+                { (!this.isReachFirst()) && (
                     <div 
                         className="image-carousel__arrow image-carousel__arrow--prev"
                         onClick = {this._handlePrev}
@@ -413,7 +587,7 @@ class ImageCarousel extends Component {
                         <ArrowBackIosOutlined style={{fontSize: `16px`}} />
                     </div>
                 )}
-                { (offset_end < carousel_length - 1) && (
+                { (!this.isReachLast()) && (
                     <div
                         className="image-carousel__arrow image-carousel__arrow--next"
                         onClick = {this._handleNext}
@@ -454,6 +628,8 @@ ImageCarousel.defaultProps = {
         draggable: false,
         infinite: false,
         dots: false,
+        dragSpeed: 1.5,
+        ease: 0.1,
     },
     responsive: [
         

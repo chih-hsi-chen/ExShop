@@ -1,46 +1,18 @@
 import React, { Component } from 'react';
 import 'decoration/FeatureList.css';
 
-class Feature extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            image: '',
-        };
-
-        this.loadImage = this.loadImage.bind(this);
-    }
-
-    componentDidMount() {
-        this.loadImage(this.props.imageName);
-    }
-
-    loadImage(imageName) {
-        import(`images/values/${imageName}.png`).then(image => {            
-            this.setState({
-                image: image.default
-            });
-        }).catch((err) => {
-            console.log(err);            
-        });
-    }
-
-    render() {
-        const {props, state} = this;
-
-        return (
-            <section className="values__block">
-                <div className="values__image">
-                    <img src={state.image} alt="values block" />
-                </div>
-                <h1 className="values__title">{props.title}</h1>
-                <p className="values__details">
-                    {props.details}
-                </p>
-            </section>
-        );
-    }    
+const Feature = (props) => {
+    return (
+        <section className="values__block">
+            <div className="values__image">
+                <img src={`${process.env.PUBLIC_URL}/values/${props.image}.png`} alt="values block" />
+            </div>
+            <h1 className="values__title">{props.title}</h1>
+            <p className="values__details">
+                {props.details}
+            </p>
+        </section>
+    );
 };
 
 class FeatureList extends Component {

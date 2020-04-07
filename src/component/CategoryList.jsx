@@ -2,45 +2,21 @@ import React, { Component } from 'react';
 import ImageCarousel from 'component/ImageCarousel.jsx';
 import 'decoration/CategoryList.css';
 
-class CategoryItem extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            imagesrc: null,
-        };
-        this.loadImage = this.loadImage.bind(this);
-    }
+const CategoryItem = (props) => {
+    return (
+        <a className="category-item" href="#">
+            <div className="category-item__image">
+                <div className="category-item__background"></div>
+                <picture>
+                    <img className="image" src={`${process.env.PUBLIC_URL}/category/${props.image}.png`} alt=""/>
+                </picture>
+            </div>                
+            <h1 className="category-item__header">
+                {props.name}
+            </h1>
+        </a>
+    );
 
-    loadImage(imageName) {
-        import(`images/${imageName}.png`).then(image => {
-            this.setState({
-                imagesrc: image.default
-            });
-        });
-    }
-
-    componentDidMount() {
-        this.loadImage(this.props.image);
-    }
-
-    render() {
-        const {props, state} = this;
-        let {imagesrc} = state;
-
-        return (
-            <a className="category-item" href="#">
-                <div className="category-item__image">
-                    <div className="category-item__background"></div>
-                    <picture>
-                        <img className="image" src={imagesrc} alt=""/>
-                    </picture>
-                </div>                
-                <h1 className="category-item__header">
-                    {props.name}
-                </h1>
-            </a>
-        );
-    }
 }
 
 class CategoryList extends Component {
@@ -50,112 +26,112 @@ class CategoryList extends Component {
             items: [
                 {
                     name: '洋裝',
-                    image: 'png/dress',
+                    image: 'dress',
                     catid: 100,
                 },
                 {
                     name: '女上衣',
-                    image: 'png/woman-t-shirts',
+                    image: 'woman-t-shirts',
                     catid: 100,
                 },
                 {
                     name: '裙子',
-                    image: 'png/woman-skirts',
+                    image: 'woman-skirts',
                     catid: 100,
                 },
                 {
                     name: '女鞋',
-                    image: 'png/woman-shoes',
+                    image: 'woman-shoes',
                     catid: 100,
                 },
                 {
                     name: '牛仔褲',
-                    image: 'png/clothes',
+                    image: 'clothes',
                     catid: 100,
                 },
                 {
                     name: '男T恤',
-                    image: 'png/man-tshirts',
+                    image: 'man-tshirts',
                     catid: 100,
                 },
                 {
                     name: '男短褲',
-                    image: 'png/man-shorts',
+                    image: 'man-shorts',
                     catid: 100,
                 },
                 {
                     name: '男外套',
-                    image: 'png/jackets',
+                    image: 'jackets',
                     catid: 100,
                 },
                 {
                     name: '男眼鏡',
-                    image: 'png/glasses',
+                    image: 'glasses',
                     catid: 100,
                 },
                 {
                     name: '男長褲',
-                    image: 'png/man-pants',
+                    image: 'man-pants',
                     catid: 100,
                 },
                 {
                     name: '帽子',
-                    image: 'png/hat',
+                    image: 'hat',
                     catid: 100,
                 },
                 {
                     name: '兒童服裝',
-                    image: 'png/dress',
+                    image: 'dress',
                     catid: 100,
                 },
                 {
                     name: '襪子',
-                    image: 'png/dress',
+                    image: 'dress',
                     catid: 100,
                 },
                 {
                     name: '手錶',
-                    image: 'png/dress',
+                    image: 'dress',
                     catid: 100,
                 },
                 {
                     name: '斜背包',
-                    image: 'png/dress',
+                    image: 'dress',
                     catid: 100,
                 },
                 {
                     name: '圍巾',
-                    image: 'png/dress',
+                    image: 'dress',
                     catid: 100,
                 },
                 {
                     name: '毛衣',
-                    image: 'png/dress',
+                    image: 'dress',
                     catid: 100,
                 },
                 {
                     name: '皮鞋',
-                    image: 'png/dress',
+                    image: 'dress',
                     catid: 100,
                 },
                 {
                     name: '涼鞋',
-                    image: 'png/dress',
+                    image: 'dress',
                     catid: 100,
                 },
                 {
                     name: '髮飾',
-                    image: 'png/dress',
+                    image: 'dress',
                     catid: 100,
                 },
                 {
                     name: '髮飾',
-                    image: 'png/dress',
+                    image: 'dress',
                     catid: 100,
                 },
                 {
                     name: '髮飾',
-                    image: 'png/dress',
+                    image: 'dress',
                     catid: 100,
                 },
             ]
@@ -181,6 +157,7 @@ class CategoryList extends Component {
                                 {
                                     slideToShow: 10,
                                     slideToScroll: 10,
+                                    infinite: true,
                                 }
                             }
                             responsive = {

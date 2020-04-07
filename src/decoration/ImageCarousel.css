@@ -25,11 +25,6 @@
 }
 .image-carousel__item {
     position: relative;
-    
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
 }
 .image-carousel.dragging .image-carousel__item {
     pointer-events: none;
@@ -69,11 +64,9 @@
     transform: translateX(-50%);
 }
 .image-carousel__dot {
-	width: 1.2rem;
-    height: 1.2rem;
-    max-width: 14px;
+	width: 0.8rem;
+    height: 0.8rem;
     min-width: 12px;
-    max-height: 14px;
     min-height: 12px;
 
 	border-radius: 50%;

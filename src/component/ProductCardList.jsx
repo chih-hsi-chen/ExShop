@@ -81,7 +81,7 @@ class ProductCardList extends Component {
                                         }
                                     },
                                     {
-                                        breakpoint: 630,
+                                        breakpoint: 768,
                                         setting: {
                                             slideToShow: 3.2,
                                             slideToScroll: 3.2,

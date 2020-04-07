@@ -49,7 +49,9 @@ class HeroBanner extends Component {
                                     slideToShow: 1,
                                     slideToScroll: 1,
                                     draggable: true,
+                                    infinite: true,
                                     dots: true,
+                                    dragSpeed: 1.2,
                                 }
                             }
                         >
