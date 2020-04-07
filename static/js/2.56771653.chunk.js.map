@@ -1,1 +1,0 @@
-{"version":3,"sources":["images/values/full-collection.png"],"names":["module","exports"],"mappings":"oFAAAA,EAAOC,QAAU,IAA0B","file":"static/js/2.56771653.chunk.js","sourcesContent":["module.exports = __webpack_public_path__ + \"static/media/full-collection.54c3f779.png\";"],"sourceRoot":""}
