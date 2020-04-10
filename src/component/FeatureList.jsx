@@ -5,7 +5,7 @@ const Feature = (props) => {
     return (
         <section className="values__block">
             <div className="values__image">
-                <img src={`${process.env.PUBLIC_URL}/values/${props.image}.png`} alt="values block" />
+                <img src={`${process.env.PUBLIC_URL}/values/${props.image}.svg`} alt="values block" />
             </div>
             <h1 className="values__title">{props.title}</h1>
             <p className="values__details">

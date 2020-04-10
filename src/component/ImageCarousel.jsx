@@ -639,7 +639,7 @@ class ImageCarousel extends Component {
         let listStyle = {
             transform: `translateX(${-offset_start * size}${unit})`
         };
-        const scrollableClass = scrollable? 'scroll' : 'no-scroll';
+        const scrollableClass = (scrollable && !draggable)? 'scroll' : 'no-scroll';
 
         if(draggable) {
             listStyle.transform = `translateX(${-offset_start * size + dragOffset}${unit})`

@@ -41,7 +41,7 @@
     position: relative;
     width: 100%;
 }
-.values__image > img {
+.values__image img {
     display: block;
     width: 100%;
 }
