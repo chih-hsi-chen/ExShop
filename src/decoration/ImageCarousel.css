@@ -2,9 +2,6 @@
     position: relative;
     overflow: hidden;
 }
-.image-carousel.dragging {
-    cursor: grab;
-}
 .image-carousel__itemlist-wrapper {
     position: relative;
     overflow-y: hidden;
@@ -13,9 +10,17 @@
     scrollbar-width: none;
     -ms-overflow-style: none;    
 }
-
 .image-carousel__itemlist-wrapper::-webkit-scrollbar {
     display: none;
+}
+.image-carousel__itemlist-wrapper.dragging {
+    cursor: grab;
+}
+.image-carousel__itemlist-wrapper.no-scroll {
+    overflow-x: hidden;
+}
+.image-carousel__itemlist-wrapper.scroll {
+    overflow-x: auto;
 }
 
 .image-carousel__itemlist {
@@ -88,9 +93,6 @@
     }
 }
 @media (max-width: 900px) {
-    .image-carousel__itemlist-wrapper {
-        overflow-x: auto;
-    }
     .image-carousel__itemlist {
         transition: none;
     }

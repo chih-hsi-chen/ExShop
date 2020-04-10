@@ -23,17 +23,17 @@ class FeatureList extends Component {
                 {
                     title: '網羅各國好設計',
                     details: '你無須走出家門，透過網路即可找到最適合你的商品！',
-                    imageName: 'full-collection',
+                    image: 'full-collection',
                 },
                 {
                     title: '優惠特價好所在',
                     details: '貨比三家不吃虧，以更優惠的價格買到你心目中的設計。',
-                    imageName: 'discount',
+                    image: 'discount',
                 },
                 {
                     title: '消費資訊不外洩',
                     details: '由專業團隊為你的個資做層層把關，保障你的消費權益！',
-                    imageName: 'security',
+                    image: 'security',
                 },
             ]
         };

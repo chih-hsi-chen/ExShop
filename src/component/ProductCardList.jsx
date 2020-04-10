@@ -78,6 +78,7 @@ class ProductCardList extends Component {
                                         setting: {
                                             slideToShow: 4.2,
                                             slideToScroll: 4.2,
+                                            scrollable: true,
                                         }
                                     },
                                     {
@@ -85,6 +86,7 @@ class ProductCardList extends Component {
                                         setting: {
                                             slideToShow: 3.2,
                                             slideToScroll: 3.2,
+                                            scrollable: true,
                                         }
                                     },
                                     {
@@ -92,6 +94,7 @@ class ProductCardList extends Component {
                                         setting: {
                                             slideToShow: 2.2,
                                             slideToScroll: 2.2,
+                                            scrollable: true,
                                         }
                                     }
                                 ]

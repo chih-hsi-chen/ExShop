@@ -6,14 +6,18 @@ import 'decoration/ImageCarousel.css';
 function lerp(a, b, n) {
     return (1 - n) * a + n * b;
 }
+function floor(n) {
+    const sign = (n >= 0) ? 1 : -1;
+    const magnitude = Math.floor(Math.abs(n));
+
+    return sign * magnitude;
+}
 /**
  * Return touch event target (information for pointer location)
  * 
  * @param {TouchEvent} e - Touch event from users
  */
 function getTouchClient(e) {
-    console.log(e);
-    
     return e.targetTouches[0];
 }
 
@@ -56,6 +60,18 @@ const ImageCarouselItem = (props) => {
 }
 
 class ImageCarousel extends Component {
+    static defaultConfig = {
+        unit: '%',
+        slideToShow: 1,
+        slideToScroll: 1,
+        draggable: false,
+        scrollable: false,
+        infinite: false,
+        auto: false,
+        dots: false,
+        dragSpeed: 1.5,
+        ease: 0.1,
+    }; 
     constructor(props) {
         super(props);
         this.state = {
@@ -82,11 +98,14 @@ class ImageCarousel extends Component {
         this._onTransitionEnd = this._onTransitionEnd.bind(this);
         this._handlePrev = this._handlePrev.bind(this);
         this._handleNext = this._handleNext.bind(this);
+        this.clickDot = this.clickDot.bind(this);
         this.bindDragEvents = this.bindDragEvents.bind(this);
 
         this.isTouch = false;
         this.isDragging = false;
         this.isProgress = false;
+        this.isHover = false;
+        this.isDragStop = true;
         this.startTime = 0;
         this.endTime = 0;
 
@@ -94,6 +113,7 @@ class ImageCarousel extends Component {
         this.currentX = 0;
         this.lastX = 0;
         this.rAF = undefined;
+        this.autoAniInterval = null;
 
         this.bindDragEvents();
     }
@@ -117,7 +137,23 @@ class ImageCarousel extends Component {
     componentDidMount() {
         this._onResize();
         window.addEventListener('resize', this._onResize);
+        
         this._list.addEventListener('transitionend', this._onTransitionEnd);
+        
+        this._wrapper.addEventListener('mouseenter', () => {
+            this.isHover = true;
+            this.clearAutoPlay();
+        });
+        this._wrapper.addEventListener('mouseleave', (e) => {
+            this.isHover = false;
+
+            if(this.isDragging)
+                this.dragEnd(e);
+
+            if(this.state.auto && !this.autoAniInterval) {
+                this.setAutoPlay('mouse leave');
+            }
+        });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -136,19 +172,17 @@ class ImageCarousel extends Component {
     run() {
         const {ease} = this.state;
         this.lastX = lerp(this.lastX, this.currentX, ease);
-        this.lastX = Math.floor(this.lastX * 100) / 100;
-
-        if(Math.round(this.lastX) === 0)
-            this.lastX = 0;
+        this.lastX = floor(this.lastX);
 
         // only when dragging or dragend(fail to slide over) need to update dragOffset
-        if(this.isDragging || !(this.currentX === 0 && this.lastX === this.currentX) ) {
+        if(this.isDragging || !this.isDragStop ) {
             this.setState((prevState) => {
                 return {
                     dragOffset: this.getDragOffset(),
                 };
             });
         }
+        this.isDragStop = this.lastX === 0 && !this.isDragging;
 
         this.requestAnimationFrame();
     }
@@ -172,6 +206,7 @@ class ImageCarousel extends Component {
         magnitude = (this.currentX >= 0) ? 1 : -1;
 
         this.currentX = magnitude * Math.min(Math.abs(this.currentX), wrapperRect.width / 2);
+        this.currentX *= 100;
     }
     /**
      * Record drag start information
@@ -184,10 +219,14 @@ class ImageCarousel extends Component {
 
         if(this.isProgress)
             return;
-        if(this.isTouch)
+        if(this.isTouch) {
             e = getTouchClient(e);
-        
+        }
+        // stop auto play no matter carousel is set to auto play
+        this.clearAutoPlay();
+
         this.isDragging = true;
+        this.isDragStop = false;
         this.mouseonX = e.clientX - wrapperRect.left;
         this.startTime = Date.now(); // include milliseconds
         this._wrapper.classList.add('dragging');
@@ -199,22 +238,28 @@ class ImageCarousel extends Component {
      */
     dragEnd(e) {
         const wrapper_width = this._wrapper.clientWidth;
-        const dragRatio = Math.abs( this.lastX / wrapper_width );
+        const dragRatio = Math.abs( this.lastX / wrapper_width ) / 100;
+        let dragSuccess = false;
         e.preventDefault();
 
+        if(this.isProgress || !this.isDragging)
+            return;
+        
         // include milliseconds
         this.endTime = Date.now();
         // depend on drag ratio and drag velocity(unit: px/s)
         if( dragRatio >= 0.2 || this.calcDragVelocity() >= 300.0 ) {
             let handleMove = (this.lastX > 0) ? this._handlePrev : this._handleNext;
 
-            if(handleMove()) {
+            if(dragSuccess = handleMove()) {
                 this.lastX = 0;
                 this.setState({
                     dragOffset: 0,
                 });
             }
         }
+        if(!dragSuccess && this.state.auto && !this.isHover && !this.autoAniInterval)
+            this.setAutoPlay('drag end');
 
         this.isDragging = false;
         this.currentX = 0;
@@ -225,19 +270,21 @@ class ImageCarousel extends Component {
         const wrapper_width = this._wrapper.clientWidth;
 
         if(unit === '%') {
-            return this.lastX * 100 / wrapper_width;
+            // because lastX is multiplied by 100, it doesn't need to be divided by 100 again.
+            return this.lastX / wrapper_width;
         }
         
-        return this.lastX;
+        return this.lastX / 100;
     }
     calcDragVelocity = () => {
         const elaspedTime = this.endTime - this.startTime;
-        const distance = this.currentX;
 
         if(elaspedTime === 0)
             return 0;
-        
-        return Math.abs(distance * 1000 / elaspedTime);
+
+        // because currentX and lastX are 100 times to avoid precision problem
+        // So, we only need to multiply by 10 instead of 1000.
+        return Math.abs(this.currentX * 10 / elaspedTime);
     }
     addDragEvents() {
         this.run();
@@ -281,6 +328,10 @@ class ImageCarousel extends Component {
             unit: '%',
             draggable: false,
             infinite: false,
+            auto: false,
+            dots: false,
+            dragSpeed: 1.5,
+            ease: 0.1,
         };
 
         res.forEach((media) => {
@@ -292,14 +343,20 @@ class ImageCarousel extends Component {
         });
 
         targetSetting = {
-            ...defaultConfig,
+            ...ImageCarousel.defaultConfig,
             ...targetSetting,
         };        
 
         this.adjustCarousel(targetSetting);
     }
     _onTransitionEnd() {
-        const {offset_start, infinite, slideToShow, length} = this.state;
+        const {
+            offset_start,
+            infinite,
+            slideToShow,
+            length,
+            auto
+        } = this.state;
         const isCloned = (offset_start <= (slideToShow - 1) || offset_start >= length - slideToShow);
 
         this.isProgress = false;
@@ -311,6 +368,9 @@ class ImageCarousel extends Component {
             else
                 this.moveTo(slideToShow, false);
         }
+        if(auto && !this.isHover && !this.autoAniInterval) {
+            this.setAutoPlay('transition end');
+        }
     }
     /**
      * 
@@ -318,16 +378,20 @@ class ImageCarousel extends Component {
      * @param {Object} setting - carousel setting
      */
     adjustCarousel(setting) {
-        const {slideToShow, infinite} = setting;
+        const {slideToShow, unit, infinite, auto} = setting;
         let carousel_length = this.props.children.length;
         let size =  `${100 / slideToShow}`;
 
-        if(setting.unit === 'px') {
+        if(unit === 'px') {
             const wrapper_size = this._wrapper.clientWidth;
             size = `${wrapper_size / slideToShow}`;
         }
-        if(setting.infinite)
+        if(infinite)
             carousel_length += slideToShow * 2;
+
+        this.clearAutoPlay();
+        if(auto)
+            this.setAutoPlay('adjust carousel');
 
         this.setState((prevState) => {
             let newOffsetStart = prevState.offset_start;
@@ -396,6 +460,10 @@ class ImageCarousel extends Component {
             return false;
 
         return this.move(scrollOffset);
+    }
+    clickDot(targetIndex) {
+        this.clearAutoPlay();
+        this.moveTo(targetIndex);
     }
     /**
      * Move carousel by specific offset
@@ -508,7 +576,7 @@ class ImageCarousel extends Component {
                 <ImageCarouselDot
                     key = {index}
                     offset = {moveToOffset}
-                    handleClick = {this.moveTo}
+                    handleClick = {this.clickDot}
                     isActive = {active}
                 />
             );
@@ -545,6 +613,16 @@ class ImageCarousel extends Component {
         
         return (offset_end === length - 1);
     }
+    clearAutoPlay = () => {
+        clearInterval(this.autoAniInterval);
+        this.autoAniInterval = null;
+    }
+    setAutoPlay = (str) => {
+        // console.log(str);
+        this.autoAniInterval = setInterval(() => {
+            this._handleNext();
+        }, 4000);
+    }
 
     render() {
         const {
@@ -553,6 +631,7 @@ class ImageCarousel extends Component {
             size,
             unit,
             draggable,
+            scrollable,
             dots,
             dragOffset,
         } = this.state;
@@ -560,17 +639,18 @@ class ImageCarousel extends Component {
         let listStyle = {
             transform: `translateX(${-offset_start * size}${unit})`
         };
+        const scrollableClass = scrollable? 'scroll' : 'no-scroll';
 
         if(draggable) {
             listStyle.transform = `translateX(${-offset_start * size + dragOffset}${unit})`
         }
 
         return ( 
-            <div 
-                className="image-carousel"
-                ref = {w => (this._wrapper = w)}
-            >
-                <div className="image-carousel__itemlist-wrapper">
+            <div className="image-carousel">
+                <div
+                    className={`image-carousel__itemlist-wrapper ${scrollableClass}`}
+                    ref = {w => (this._wrapper = w)}
+                >
                     <ul
                         className="image-carousel__itemlist"
                         style={listStyle}
@@ -582,7 +662,10 @@ class ImageCarousel extends Component {
                 { (!this.isReachFirst()) && (
                     <div 
                         className="image-carousel__arrow image-carousel__arrow--prev"
-                        onClick = {this._handlePrev}
+                        onClick = {() => {
+                            this.clearAutoPlay();
+                            this._handlePrev();
+                        }}
                     >
                         <ArrowBackIosOutlined style={{fontSize: `16px`}} />
                     </div>
@@ -590,7 +673,10 @@ class ImageCarousel extends Component {
                 { (!this.isReachLast()) && (
                     <div
                         className="image-carousel__arrow image-carousel__arrow--next"
-                        onClick = {this._handleNext}
+                        onClick = {() => {
+                            this.clearAutoPlay();
+                            this._handleNext();
+                        }}
                     >
                         <ArrowForwardIosOutlined style={{fontSize: `16px`}} />
                     </div>
@@ -622,18 +708,8 @@ ImageCarousel.propTypes = {
  * - dots: boolean, if display dots at bottom
  */
 ImageCarousel.defaultProps = {
-    default_setting: {
-        slideToShow: 1,
-        slideToScroll: 1,
-        draggable: false,
-        infinite: false,
-        dots: false,
-        dragSpeed: 1.5,
-        ease: 0.1,
-    },
-    responsive: [
-        
-    ]
+    default_setting: ImageCarousel.defaultConfig,
+    responsive: [],
 };
  
 export default ImageCarousel;

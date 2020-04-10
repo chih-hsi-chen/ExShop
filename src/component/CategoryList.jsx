@@ -157,7 +157,6 @@ class CategoryList extends Component {
                                 {
                                     slideToShow: 10,
                                     slideToScroll: 10,
-                                    infinite: true,
                                 }
                             }
                             responsive = {
@@ -181,6 +180,8 @@ class CategoryList extends Component {
                                         setting: {
                                             slideToShow: 3,
                                             slideToScroll: 3,
+                                            draggable: true,
+                                            infinite: true,
                                         }
                                     }
                                 ]
